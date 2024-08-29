@@ -18,5 +18,4 @@ public class Producto implements Serializable {
 
     private int stock;
 
-    private String qr;
 }

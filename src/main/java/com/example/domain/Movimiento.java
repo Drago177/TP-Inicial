@@ -16,6 +16,9 @@ public class Movimiento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String tipo;
+    
     @Column(name = "tipo_producto", nullable = false)
     private String tipoProducto;
 

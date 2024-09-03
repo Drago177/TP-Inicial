@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class ProductoController {
     @Autowired
@@ -22,6 +22,7 @@ public class ProductoController {
     public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
         productoService.guardar(producto);
         Producto productoGuardado = productoService.encontrarProducto(producto);
+        //movimientos de tipo entrada
         return ResponseEntity.ok(productoGuardado);
     }
 

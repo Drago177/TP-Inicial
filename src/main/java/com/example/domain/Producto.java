@@ -12,10 +12,13 @@ public class Producto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProducto;
+    private Long id;
 
-    private String nombre;
+    private String tipo;
+
+    private String marca;
 
     private int stock;
 
+    private double costo;
 }

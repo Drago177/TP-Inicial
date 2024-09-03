@@ -1,40 +1,55 @@
 package com.example.controller;
 
+import com.example.domain.Movimiento;
 import com.example.domain.Producto;
+import com.example.service.MovimientoService;
 import com.example.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://gestionstock-tplabo.netlify.app")
 @RestController
+@RequestMapping("productos")
 public class ProductoController {
     @Autowired
     ProductoService productoService;
+    @Autowired
+    MovimientoService movimientoService;
 
-    @GetMapping("productos")
+    @GetMapping()
     public List<Producto> listarProductos(){
         return productoService.listarProductos();
     }
 
-    @PostMapping("guardar")
+    @PostMapping()
     public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
-        productoService.guardar(producto);
-        Producto productoGuardado = productoService.encontrarProducto(producto);
-        //movimientos de tipo entrada
-        return ResponseEntity.ok(productoGuardado);
+        return ResponseEntity.ok(productoService.guardar(producto));
     }
 
-    @PostMapping("eliminar/{id}")
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        Producto productoActual = productoService.encontrarProductoPorId(id);
+        if(productoActual == null)
+            return ResponseEntity.notFound().build();
+        productoActual.setStock(productoActual.getStock() + producto.getStock());
+
+        return ResponseEntity.ok(productoService.guardar(productoActual));
+    }
+
+    @DeleteMapping("/{id}")
     public String eliminar(@PathVariable Long id){
-        productoService.eliminar(productoService.encontrarProductoPorId(id));
-        if(productoService.encontrarProductoPorId(id) == null)
+        Producto producto = productoService.encontrarProductoPorId(id);
+        productoService.eliminar(producto);
+        if(productoService.encontrarProductoPorId(id) == null) {
             return "Producto eliminado";
+        }
         return "Error al eliminar";
     }
 
-    @GetMapping("productos/{id}")
+    @GetMapping("/{id}")
     public Producto encontrarProducto(@PathVariable Long id){
         return productoService.encontrarProductoPorId(id);
     }

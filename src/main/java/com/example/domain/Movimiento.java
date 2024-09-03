@@ -16,8 +16,8 @@ public class Movimiento implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tipo_producto", nullable = false)
-    private String tipoProducto;
+    @Column(name = "id_producto", nullable = false)
+    private Long idProducto;
 
     @Column(nullable = false)
     private int cantidad;
@@ -28,4 +28,5 @@ public class Movimiento implements Serializable {
     @Column(name = "costo_total", nullable = false)
     private double costoTotal;
 
+    private String tipoMovimiento;
 }

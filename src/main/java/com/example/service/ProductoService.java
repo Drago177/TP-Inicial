@@ -6,7 +6,7 @@ import java.util.List;
 public interface ProductoService {
     List<Producto> listarProductos();
 
-    void guardar(Producto producto);
+    Producto guardar(Producto producto);
 
     void eliminar(Producto producto);
 

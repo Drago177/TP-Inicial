@@ -19,5 +19,8 @@ public class Producto implements Serializable {
 
     private String marca;
 
+    private int stock;
+
     private double costo;
+
 }

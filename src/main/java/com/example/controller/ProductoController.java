@@ -6,9 +6,8 @@ import com.example.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
+
 @CrossOrigin(origins = "https://gestionstock-tplabo.netlify.app")
 @RestController
 @RequestMapping("productos")
@@ -38,6 +37,19 @@ public class ProductoController {
         return ResponseEntity.ok(productoService.guardar(productoActual));
     }
 
+    /*
+    public ResponseEntity<Producto> actualizarProducto2(@PathVariable Long id, @RequestBody Producto producto) {
+        Producto productoActual = productoService.encontrarProductoPorId(id);
+        if(productoActual == null)
+            return ResponseEntity.notFound().build();
+        double stockResult = productoActual.getStock() + producto.getStock();
+        if(stockResult < 0)
+            return ResponseEntity.badRequest().body(producto);
+        productoActual.setStock(productoActual.getStock() + producto.getStock());
+
+        return ResponseEntity.ok(productoService.guardar(productoActual));
+    }
+    */
     @DeleteMapping("/{id}")
     public String eliminar(@PathVariable Long id){
         Producto producto = productoService.encontrarProductoPorId(id);

@@ -2,23 +2,18 @@ package com.example.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name="producto")
-public class Producto implements Serializable {
+@Table(name="configuracion")
+public class Configuracion {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tipo;
+    @Column(name = "stock_Minimo")
+    private int stockMin;
 
-    private String marca;
-
-    private int stock;
-
-    private double costo;
-
+    private double porcentajeCostoMax;
 }

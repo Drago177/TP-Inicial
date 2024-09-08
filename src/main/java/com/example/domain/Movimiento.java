@@ -18,9 +18,10 @@ public class Movimiento implements Serializable {
 
     @Column(nullable = false)
     private String tipo;
-    
-    @Column(name = "tipo_producto", nullable = false)
-    private String tipoProducto;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_producto")
+    Producto producto;
 
     @Column(nullable = false)
     private int cantidad;

@@ -14,6 +14,9 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private ProductoDao productoDao;
 
+    @Autowired
+    private MovimientoService movimientoService;
+
     @Override
     public List<Producto> listarProductos() {
         return (List<Producto>) productoDao.findAll();

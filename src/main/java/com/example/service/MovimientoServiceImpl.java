@@ -2,9 +2,11 @@ package com.example.service;
 
 import com.example.dao.MovimientoDao;
 import com.example.domain.Movimiento;
+import com.example.domain.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +22,20 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     @Override
-    public Movimiento guardarMovimiento(Movimiento movimiento) {
+    public Movimiento guardarMovimiento(Producto producto, int cantidad) {
+        Movimiento movimiento = new Movimiento();
+
+        if(cantidad < 0)
+            movimiento.setTipo("Salida");
+        else {
+            movimiento.setTipo("Ingreso");
+            movimiento.setCostoTotal(producto.getCosto() * cantidad);
+        }
+
+        movimiento.setProducto(producto);
+        movimiento.setFechaHora(LocalDateTime.now());
+        movimiento.setCantidad(cantidad);
+
         return movimientoDao.save(movimiento);
     }
 

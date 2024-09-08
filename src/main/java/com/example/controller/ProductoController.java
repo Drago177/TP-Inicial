@@ -32,24 +32,18 @@ public class ProductoController {
         Producto productoActual = productoService.encontrarProductoPorId(id);
         if(productoActual == null)
             return ResponseEntity.notFound().build();
-        productoActual.setStock(productoActual.getStock() + producto.getStock());
-
-        return ResponseEntity.ok(productoService.guardar(productoActual));
-    }
-
-    /*
-    public ResponseEntity<Producto> actualizarProducto2(@PathVariable Long id, @RequestBody Producto producto) {
-        Producto productoActual = productoService.encontrarProductoPorId(id);
-        if(productoActual == null)
-            return ResponseEntity.notFound().build();
-        double stockResult = productoActual.getStock() + producto.getStock();
+        int stockResult = productoActual.getStock() + producto.getStock();
         if(stockResult < 0)
             return ResponseEntity.badRequest().body(producto);
-        productoActual.setStock(productoActual.getStock() + producto.getStock());
-
-        return ResponseEntity.ok(productoService.guardar(productoActual));
+        /*
+            lógica de compra automática
+         */
+        productoActual.setStock(stockResult);
+        Producto productoUPD = productoService.guardar(productoActual);
+        movimientoService.guardarMovimiento(productoUPD, producto.getStock());
+        return ResponseEntity.ok(productoUPD);
     }
-    */
+
     @DeleteMapping("/{id}")
     public String eliminar(@PathVariable Long id){
         Producto producto = productoService.encontrarProductoPorId(id);

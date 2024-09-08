@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.domain.Movimiento;
+import com.example.domain.Producto;
 import com.example.service.MovimientoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,8 @@ public class MovimientoController {
         return movimientoService.obtenerTodos();
     }
 
-    @PostMapping
-    public ResponseEntity<Movimiento> crearMovimiento(@RequestBody Movimiento movimiento) {
-        Movimiento movimientoGuardado = movimientoService.guardarMovimiento(movimiento);
-        return ResponseEntity.ok(movimientoGuardado);
+    public Movimiento crearMovimiento(Producto producto, int cantidad) {
+        return movimientoService.guardarMovimiento(producto, cantidad);
     }
 
     @GetMapping("/{id}")

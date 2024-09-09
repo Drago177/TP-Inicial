@@ -1,7 +1,9 @@
 package com.example.service;
 
-import com.example.domain.Compra;
+import com.example.dto.CompraDTO;
 import com.example.domain.Producto;
+import com.example.dto.CompraResponseDTO;
+import com.example.dto.CostoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,12 @@ public class ApiCompraServiceImpl implements ApiCompraService{
 
 
     @Override
-    public Double pedirCostos(Producto producto) {
-        return restTemplate.getForObject(baseUrl + "?tipoProducto=" + producto.getTipo() + "&marca=" + producto.getMarca(), Double.class);
+    public CostoDTO pedirCosto(Producto producto) {
+        return restTemplate.getForObject(baseUrl + "costo" + "?tipoProducto=" + producto.getTipo() + "&marca=" + producto.getMarca(), CostoDTO.class);
     }
 
     @Override
-    public String comprar(Compra compra) {
-        return restTemplate.postForObject(baseUrl, compra, String.class);
+    public CompraResponseDTO comprar(CompraDTO compra) {
+        return restTemplate.postForObject(baseUrl + "compra", compra, CompraResponseDTO.class);
     }
 }

@@ -1,9 +1,11 @@
 package com.example.service;
 
-import com.example.domain.Compra;
+import com.example.dto.CompraDTO;
 import com.example.domain.Producto;
+import com.example.dto.CompraResponseDTO;
+import com.example.dto.CostoDTO;
 
 public interface ApiCompraService {
-    Double pedirCostos(Producto producto);
-    String comprar(Compra compra);
+    CostoDTO pedirCosto(Producto producto);
+    CompraResponseDTO comprar(CompraDTO compra);
 }

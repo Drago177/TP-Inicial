@@ -3,8 +3,8 @@ package com.example.service;
 import com.example.dao.ProductoDao;
 import com.example.domain.Configuracion;
 import com.example.domain.Producto;
+import com.example.dto.CompraDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +19,9 @@ public class ProductoServiceImpl implements ProductoService {
     private ApiCompraService apiCompraService;
 
     @Autowired
+    private MovimientoService movimientoService;
+
+    @Autowired
     private ConfiguracionService configuracionService;
 
     @Override
@@ -28,7 +31,7 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Producto guardar(Producto producto) {
-        //compraAutomatica(producto);
+        compraAutomatica(producto);
         return productoDao.save(producto);
     }
 
@@ -52,8 +55,19 @@ public class ProductoServiceImpl implements ProductoService {
     private void compraAutomatica(Producto producto) {
         Configuracion config = configuracionService.darPrimeraConfiguracion();
         if(producto.getStock() <= config.getStockMin()) {
-            Double costos = apiCompraService.pedirCostos(producto);
-
+            double costo = apiCompraService.pedirCosto(producto).getCosto();
+            if(costo <= producto.getCosto() * (1 + config.getPorcentajeCostoMax())){
+                int cantidad = config.getStockMin() - producto.getStock();
+                if(apiCompraService.comprar(new CompraDTO(producto, cantidad)).getMessage().equals("Compra realizada con exito")) {
+                    registrarMovimiento(producto, cantidad);
+                    producto.setStock(producto.getStock() + cantidad);
+                    productoDao.save(producto);
+                }
+            }
         }
+    }
+
+    private void registrarMovimiento(Producto producto, int cantidad){
+        movimientoService.guardarMovimiento(producto, cantidad);
     }
 }

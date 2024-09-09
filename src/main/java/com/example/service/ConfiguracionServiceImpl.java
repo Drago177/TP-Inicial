@@ -19,4 +19,10 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
     public Configuracion encontrarConfiguracionPorId(Long id) {
         return configuracionDao.findById(id).orElse(null);
     }
+
+    @Override
+    public Configuracion darPrimeraConfiguracion() {
+        return configuracionDao.findById((long)1).orElse(null);
+    }
+
 }

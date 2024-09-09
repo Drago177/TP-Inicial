@@ -35,9 +35,6 @@ public class ProductoController {
         int stockResult = productoActual.getStock() + producto.getStock();
         if(stockResult < 0)
             return ResponseEntity.badRequest().body(producto);
-        /*
-            lógica de compra automática
-         */
         productoActual.setStock(stockResult);
         Producto productoUPD = productoService.guardar(productoActual);
         movimientoService.guardarMovimiento(productoUPD, producto.getStock());

@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dao.ProductoDao;
+import com.example.domain.Configuracion;
 import com.example.domain.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +16,10 @@ public class ProductoServiceImpl implements ProductoService {
     private ProductoDao productoDao;
 
     @Autowired
-    private MovimientoService movimientoService;
+    private ApiCompraService apiCompraService;
+
+    @Autowired
+    private ConfiguracionService configuracionService;
 
     @Override
     public List<Producto> listarProductos() {
@@ -24,6 +28,7 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Producto guardar(Producto producto) {
+        //compraAutomatica(producto);
         return productoDao.save(producto);
     }
 
@@ -41,42 +46,14 @@ public class ProductoServiceImpl implements ProductoService {
     public Producto encontrarProductoPorId(Long id) {
         return productoDao.findById(id).orElse(null);
     }
-/*
-    @Scheduled(fixedRate = 3600000)
-    private void revisarStock() {
-        double margen = 40;
-        List<Producto> productos = listarProductos();
-        for(Producto producto : productos)
-            if(producto.getStock() <= 50) {
-                Compra compra = new Compra(producto.getNombre(), margen);
-                comprar(compra);
-            }
 
+    //Compra automática
+
+    private void compraAutomatica(Producto producto) {
+        Configuracion config = configuracionService.darPrimeraConfiguracion();
+        if(producto.getStock() <= config.getStockMin()) {
+            Double costos = apiCompraService.pedirCostos(producto);
+
+        }
     }
-
-    private boolean comprar(Producto producto) {
-        if (revisarCostos(producto))
-            return comprarApi();
-
-        return false;
-    }
-
-    private boolean comprarApi() {
-        //petición de compra a la api
-        return false;
-    }
-
-    private boolean revisarCostos(Producto producto) {
-        double costosAceptables = 0;
-        if (pedirCostosApi(producto) <= costosAceptables)
-            return true;
-        return false;
-    }
-
-    private double pedirCostosApi(Producto producto) {
-        //pide los costos de la compra a la api
-        return 0;
-    }
-
- */
 }

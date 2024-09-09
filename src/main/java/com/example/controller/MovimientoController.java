@@ -2,23 +2,29 @@ package com.example.controller;
 
 import com.example.domain.Movimiento;
 import com.example.domain.Producto;
+import com.example.dto.MovimientoDTO;
 import com.example.service.MovimientoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/movimientos")
+
 public class MovimientoController {
 
     @Autowired
     private MovimientoService movimientoService;
 
     @GetMapping
-    public List<Movimiento> listarMovimientos() {
-        return movimientoService.obtenerTodos();
+    public List<MovimientoDTO> listarMovimientos() {
+        List<MovimientoDTO> movimientos = new ArrayList<>();
+        for(Movimiento m : movimientoService.obtenerTodos())
+            movimientos.add(new MovimientoDTO(m));
+        return movimientos;
     }
 
     public Movimiento crearMovimiento(Producto producto, int cantidad) {

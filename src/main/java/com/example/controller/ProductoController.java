@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.domain.Producto;
+import com.example.dto.RespuestaDTO;
 import com.example.service.MovimientoService;
 import com.example.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +29,24 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+    public ResponseEntity<RespuestaDTO> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
         Producto productoActual = productoService.encontrarProductoPorId(id);
+        RespuestaDTO respuesta;
         if(productoActual == null)
             return ResponseEntity.notFound().build();
+
         int stockResult = productoActual.getStock() + producto.getStock();
-        if(stockResult < 0)
-            return ResponseEntity.badRequest().body(producto);
+        if(stockResult < 0) {
+            respuesta = generarRespuesta("error",
+                    "Stock insuficiente, el stock disponible es " + productoActual.getStock());
+            return ResponseEntity.badRequest().body(respuesta);
+        }
+
         productoActual.setStock(stockResult);
         Producto productoUPD = productoService.guardar(productoActual);
         movimientoService.guardarMovimiento(productoUPD, producto.getStock());
-        return ResponseEntity.ok(productoUPD);
+        respuesta = generarRespuesta("actualizado", "stock restante: " + productoUPD.getStock());
+        return ResponseEntity.ok().body(respuesta);
     }
 
     @DeleteMapping("/{id}")
@@ -54,5 +62,12 @@ public class ProductoController {
     @GetMapping("/{id}")
     public Producto encontrarProducto(@PathVariable Long id){
         return productoService.encontrarProductoPorId(id);
+    }
+
+    private RespuestaDTO generarRespuesta(String status, String desciption){
+        RespuestaDTO respuesta = new RespuestaDTO();
+        respuesta.setStatus(status);
+        respuesta.setDescription(desciption);
+        return respuesta;
     }
 }

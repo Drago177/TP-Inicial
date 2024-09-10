@@ -31,6 +31,11 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Producto guardar(Producto producto) {
+        if(producto.getId() == null){
+            Producto p = productoDao.save(producto);
+            registrarMovimiento(p, producto.getStock());
+            return p;
+        }
         compraAutomatica(producto);
         return productoDao.save(producto);
     }
